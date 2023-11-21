@@ -187,7 +187,7 @@ if __name__ == '__main__':
     args = get_args()
 
     logging.basicConfig(level=logging.INFO, format='%(levelname)s: %(message)s')
-    device = torch.device("cuda:0,2,3,5" if torch.cuda.is_available() else "cpu") ## specify the GPU id's, GPU id's start from 0.
+    device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
     logging.info(f'Using device {device}')
 
     # Change here to adapt to your data
@@ -207,7 +207,10 @@ if __name__ == '__main__':
         model.load_state_dict(state_dict)
         logging.info(f'Model loaded from {args.load}')
 
-    model= nn.DataParallel(model,device_ids = [0, 2, 3, 5])
+    if(torch.cuda.is_available()):
+        model=model.cuda()
+        model= nn.DataParallel(model,device_ids = [0, 2, 3, 5])
+        
     model.to(device=device)
     try:
         train_model(
