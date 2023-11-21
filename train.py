@@ -210,6 +210,7 @@ if __name__ == '__main__':
     if(torch.cuda.is_available()):
         model = model.cuda()
         model = nn.DataParallel(model,device_ids = [0, 2])
+        logging.info(f'Using {torch.cuda.device_count()} GPUs: {model.device_ids}')
         
     model.to(device=device)
     try:
