@@ -9,16 +9,16 @@ wget --load-cookies /tmp/cookies.txt "https://docs.google.com/uc?export=download
 
 unzip train_cp.zip
 
-find train/ -type f -name '*img*' -exec mv {} data/images \;
-find train/ -type f -name '*masks*' -exec mv {} data/masks \;
+find train/ -type f -name '*img*' -exec mv {} data/images/ \;
+find train/ -type f -name '*masks*' -exec mv {} data/masks/ \;
 rm -d train
 rm train_cp.zip
 
 wget --no-check-certificate 'https://docs.google.com/uc?export=download&id=1eUjrC9j-ABq4rSS1BJOdpSV7JDFbRuUB' -O test_cp.zip
 unzip test_cp.zip
 
-find test/ -type f -name '*img*' -exec mv {} data/test_images \;
-find test/ -type f -name '*masks*' -exec mv {} data/test_masks \;
+find test/ -type f -name '*img*' -exec mv {} data/test_images/ \;
+find test/ -type f -name '*masks*' -exec mv {} data/test_masks/ \;
 rm -d test
 rm test_cp.zip
 
