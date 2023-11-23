@@ -39,7 +39,7 @@ def train_model(
 ):
     # 1. Create dataset
     # try:
-        #  dataset = CarvanaDataset(dir_img, dir_mask, img_scale)
+        # dataset = CarvanaDataset(dir_img, dir_mask, img_scale)
     # except (AssertionError, RuntimeError, IndexError):
     #     dataset = BasicDataset(dir_img, dir_mask, img_scale)
     
@@ -170,7 +170,7 @@ def train_model(
         if save_checkpoint:
             Path(dir_checkpoint).mkdir(parents=True, exist_ok=True)
             state_dict = model.state_dict()
-            state_dict['mask_values'] = dataset.mask_values
+            state_dict['mask_values'] = train_set.mask_values
             torch.save(state_dict, str(dir_checkpoint / 'checkpoint_epoch{}.pth'.format(epoch)))
             logging.info(f'Checkpoint {epoch} saved!')
 
@@ -216,10 +216,10 @@ if __name__ == '__main__':
         model.load_state_dict(state_dict)
         logging.info(f'Model loaded from {args.load}')
 
-    if(torch.cuda.is_available()):
-        model = model.cuda()
-        model = nn.DataParallel(model,device_ids = [0, 2])
-        logging.info(f'Using {torch.cuda.device_count()} GPUs: {model.device_ids}')
+    # if(torch.cuda.is_available()):
+    #     model = model.cuda()
+    #     model = nn.DataParallel(model,device_ids = [0, 2])
+    #     logging.info(f'Using {torch.cuda.device_count()} GPUs: {model.device_ids}')
         
     model.to(device=device)
     try:
