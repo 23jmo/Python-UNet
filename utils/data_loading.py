@@ -115,3 +115,7 @@ class BasicDataset(Dataset):
 class CarvanaDataset(BasicDataset):
     def __init__(self, images_dir, mask_dir, scale=1):
         super().__init__(images_dir, mask_dir, scale, mask_suffix='_mask')
+        
+class CellposeDataset(BasicDataset):
+    def __init__(self, images_dir: str, mask_dir: str, scale: float = 1, mask_suffix: str = ''):
+        super().__init__(images_dir, mask_dir, scale, mask_suffix='_masks')

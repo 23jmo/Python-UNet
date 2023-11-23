@@ -16,14 +16,12 @@ from tqdm import tqdm
 import wandb
 from evaluate import evaluate
 from unet import UNet
-from utils.data_loading import BasicDataset, CarvanaDataset
+from utils.data_loading import BasicDataset, CarvanaDataset, CellposeDataset
 from utils.dice_score import dice_loss
 
-dir_img = Path('./data/imgs/')
+dir_img = Path('./data/images/')
 dir_mask = Path('./data/masks/')
 dir_checkpoint = Path('./checkpoints/')
-
-
 
 def train_model(
         model,
@@ -40,15 +38,25 @@ def train_model(
         gradient_clipping: float = 1.0,
 ):
     # 1. Create dataset
-    try:
-        dataset = CarvanaDataset(dir_img, dir_mask, img_scale)
-    except (AssertionError, RuntimeError, IndexError):
-        dataset = BasicDataset(dir_img, dir_mask, img_scale)
+    # try:
+        #  dataset = CarvanaDataset(dir_img, dir_mask, img_scale)
+    # except (AssertionError, RuntimeError, IndexError):
+    #     dataset = BasicDataset(dir_img, dir_mask, img_scale)
+    
+    
+    train_set = CellposeDataset(dir_img, dir_mask, img_scale)
+    
+    test_dir_img = Path('./data/test_images/')
+    test_dir_mask = Path('./data/test_masks/')
+    
+    val_set = CellposeDataset(test_dir_img, test_dir_mask, img_scale)
+    n_train = len(train_set)
+    n_val = len(val_set)
 
     # 2. Split into train / validation partitions
-    n_val = int(len(dataset) * val_percent)
-    n_train = len(dataset) - n_val
-    train_set, val_set = random_split(dataset, [n_train, n_val], generator=torch.Generator().manual_seed(0))
+    # n_val = int(len(dataset) * val_percent)
+    # n_train = len(dataset) - n_val
+    # train_set, val_set = random_split(dataset, [n_train, n_val], generator=torch.Generator().manual_seed(0))
 
     # 3. Create data loaders
     loader_args = dict(batch_size=batch_size, num_workers=os.cpu_count(), pin_memory=True)
